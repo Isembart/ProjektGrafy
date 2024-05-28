@@ -1,16 +1,28 @@
 A = [
-    [0, 1, 1, 0],
-    [1, 0, 1, 6],
-    [1, 1, 0, 5],
-    [0, 0, 3, 0]
+    [0, 1, 1, 0,1],
+    [1, 0, 1, 6,0],
+    [1, 1, 0, 5,0],
+    [0, 0, 3, 0,0],
+    [1, 0, 0, 0,0]
 ]
 
-# funkcja do wyświetlania macierzy
+class WarshallReturn:
+    def __init__(self, Distance, PreviousNode):
+        self.Distance = Distance
+        self.PreviousNode = PreviousNode
 
+# funkcja do wyświetlania macierzy
 def printMatrix(A):
+    print("  ", end=' ')
     for i in range(len(A)):
-        print(A[i], sep=' ')
+        print(f'{i:5d}', end=' ')
     print()
+    print("  _______________________________")
+    for i in range(len(A)):
+        print(f'{i}|', end=' ')
+        for j in range(len(A)):
+            print(f'{A[i][j]:5d}', end=' ')
+        print()
 
 
 # funkcja wykonująca algorytm floyda-warshalla 
@@ -42,11 +54,21 @@ def test(W):
                 if(Distance[j][v] > Distance[j][i] + Distance[i][v]):
                     Distance[j][v] = Distance[j][i] + Distance[i][v]
                     PreviousNode[j][v] = PreviousNode[i][v]
-    return (Distance, PreviousNode)
+    return WarshallReturn(Distance, PreviousNode)
 
 
+print("Macierz sasiedztwa: ")
 printMatrix(A)
-printMatrix(test(A)[0])
-printMatrix(test(A)[1])
+Result = test(A)
+
+start = input("Podaj indeks wierzcholka startowego: ")
+end = input("Podaj indeks wierzcholka koncowego: ")
+
+print(f"Odleglosc od {start} do {end} wynosi: {Result.Distance[int(start)][int(end)]}")
+print(f"Sciezka: {end}", end=' ')
+while(int(start) != int(end)):
+    end = Result.PreviousNode[int(start)][int(end)]
+    print(f"<- {end} ", end='')
+print()
 
 
